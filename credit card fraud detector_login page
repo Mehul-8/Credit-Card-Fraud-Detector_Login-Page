@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Card Fraud Detector - Login</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 380px;
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      color: #2a5298;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 15px;
+    }
+
+    button {
+      width: 95%;
+      padding: 12px;
+      background: #2a5298;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1e3c72;
+    }
+
+    .link {
+      color: #2a5298;
+      cursor: pointer;
+      display: block;
+      margin-top: 15px;
+    }
+
+    .welcome {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Welcome to Credit Card Fraud Detector</h2>
+    <p class="welcome">Safeguard your transactions with our smart AI system 🔒</p>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Enter your Email" required />
+      <input type="password" id="loginPassword" placeholder="Enter your Password" required />
+      <input type="tel" id="loginNumber" placeholder="Enter your Phone Number" required />
+      <button onclick="login()">Sign In</button>
+      <span class="link" onclick="showRegister()">Create an Account</span>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" class="hidden">
+      <input type="email" id="regEmail" placeholder="Enter your Email" required />
+      <input type="password" id="regPassword" placeholder="Create Password" required />
+      <input type="tel" id="regNumber" placeholder="Enter your Phone Number" required />
+      <button onclick="register()">Create Account</button>
+      <span class="link" onclick="showLogin()">Already have an account? Sign In</span>
+    </div>
+  </div>
+
+  <script>
+    // Switch between login/register
+    function showRegister() {
+      document.getElementById("loginForm").classList.add("hidden");
+      document.getElementById("registerForm").classList.remove("hidden");
+    }
+
+    function showLogin() {
+      document.getElementById("registerForm").classList.add("hidden");
+      document.getElementById("loginForm").classList.remove("hidden");
+    }
+
+    // Register new user
+    function register() {
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      const number = document.getElementById("regNumber").value;
+
+      if (!email || !password || !number) {
+        alert("⚠️ Please fill all fields!");
+        return;
+      }
+
+      // Get existing users (if any)
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Check if email already exists
+      const existingUser = users.find((u) => u.email === email);
+      if (existingUser) {
+        alert("⚠️ This email is already registered! Please log in.");
+        showLogin();
+        return;
+      }
+
+      // Save new user
+      users.push({ email, password, number });
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("✅ Account created successfully! You can now log in.");
+      showLogin();
+    }
+
+    // Login existing user
+    function login() {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      const number = document.getElementById("loginNumber").value;
+
+      if (!email || !password || !number) {
+        alert("⚠️ Please fill all fields!");
+        return;
+      }
+
+      // Fetch users
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Find user match
+      const user = users.find(
+        (u) => u.email === email && u.password === password && u.number === number
+      );
+
+      if (user) {
+        alert(`🎉 Welcome back, ${email}! Redirecting to your dashboard...`);
+        // Store current user session
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        window.location.href = "main.html"; // redirect to main website
+      } else {
+        alert("❌ Invalid credentials! Please try again or create an account.");
+      }
+    }
+  </script>
+</body>
+</html>
